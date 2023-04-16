@@ -24,7 +24,7 @@ const style = {
 
 const Collection = () => {
   const router = useRouter()
-  const { provider } = useWeb3()
+  const { address, provider } = useWeb3()
   const { collectionId } = router.query
   const [collection, setCollection] = useState({})
   const [nfts, setNfts] = useState([])
@@ -36,8 +36,8 @@ const Collection = () => {
 
   (async () => {
     const nftModule = await sdk.getContract('0x169b1CE420F585d8cB02f3b23240a5b90BA54C92');
-    const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
     const nfts = await nftModule.erc721.getAll({count: 100, start: page});
+    const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
     const listings = await marketPlaceModule.getActiveListings();
     setNfts(nfts)    
     setListings(listings)

@@ -7,10 +7,9 @@ import Header from '../../components/Header'
 import NFTCard from '../../components/NFTCard'
 import { FaDiscord, FaTwitter, FaEthereum } from 'react-icons/fa'
 import { CgWebsite } from 'react-icons/cg'
+import {v3} from '../../data/v3'
 
 const style = {
-  bannerImageContainer: `h-[250px] w-screen overflow-hidden flex justify-center items-center bg-[url(../assets/v3-banner.png)] bg-cover`,
-  bannerImage: `w-full object-cover`,
   infoContainer: `w-screen px-12`,
   midRow: `w-full flex justify-center text-white`,
   socialIconsContainer: `flex text-3xl items-center`,
@@ -19,6 +18,7 @@ const style = {
   socialIcon: `my-2`,
   divider: `border-r-2`,
   title: `flex-auto text-5xl font-bold`,
+  subtitle: `flex-auto text-3xl`,
   description: `text-[#8a939b] text-xl w-max-1/4 flex-wrap mt-4`,
 }
 
@@ -36,26 +36,25 @@ const Profile= () => {
 
   (async () => {
     const nftModule = await sdk.getContract('0x169b1CE420F585d8cB02f3b23240a5b90BA54C92');
-    /*const address = '0xD6cf8705f2Af7044F7523Da6B13aB1CD90602A36';
-    const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
+    const address = '0xc672c35EAd53fFE8099593393547c2A0a6E7B625';
     const nfts = await nftModule.erc721.getOwned(address);
-    const listings = await marketPlaceModule.getActiveListings();
-    console.log('n: ', nfts)
     setNfts(nfts)    
-    setListings(listings)*/
-    const address = "0xD6cf8705f2Af7044F7523Da6B13aB1CD90602A36";
-    const nfts = await nftModule.erc721.getOwned(address);
-    console.log('nfts: ',nfts);
+    //console.log('nfts: ',nfts);
+    
+    const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
+    const listings = await marketPlaceModule.getActiveListings();
+    setListings(listings)
   })()
 
   return (
     <div className="overflow-hidden">
       <Header />
-      <div className={style.bannerImageContainer}>
-      </div>
       <div className={style.infoContainer}>
         <div className={`${style.midRow}  my-4`}>
-          <div className={style.title}>Profile</div>
+          <div className={style.title}>Profile</div>          
+        </div>
+        <div className={style.midRow}>
+          <div className={`${style.subtitle} text-[#83dfb2]`}>0xc67...B625</div>
         </div>
         <div className={`${style.midRow} mb-[2rem]`}>
           <div className={style.description}></div>

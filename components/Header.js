@@ -6,6 +6,7 @@ import {CgProfile} from 'react-icons/cg'
 import {MdOutlineAccountBalanceWallet} from 'react-icons/md'
 import {FaStoreAlt} from	'react-icons/fa'
 import Router from 'next/router'
+import { useWeb3 } from '@3rdweb/hooks'
 
 const style = {
   wrapper: `bg-[#04111d] w-screen px-[1.2rem] py-[0.8rem] flex `,
@@ -17,7 +18,7 @@ const style = {
 }
 
 const Header = () => {
-	const address = '0xD6cf8705f2Af7044F7523Da6B13aB1CD90602A36'
+	const {address} = useWeb3()
 	return <div className={style.wrapper}>
 		<Link href='/'>
 			<div className={style.logoContainer}>
@@ -40,9 +41,6 @@ const Header = () => {
 	      }}
 			>
 				<CgProfile />
-			</div>
-			<div className={style.headerIcon}>
-				<MdOutlineAccountBalanceWallet />
 			</div>
 		</div>
 	</div>

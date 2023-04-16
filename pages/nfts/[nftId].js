@@ -7,6 +7,7 @@ import NFTImage from '../../components/nft/NFTImage'
 import GeneralDetails from '../../components/nft/GeneralDetails'
 import ItemActivity from '../../components/nft/ItemActivity'
 import Purchase from '../../components/nft/Purchase'
+import Router from 'next/router'
 
 const style = {
   wrapper: `flex flex-col items-center container-lg text-[#e5e8eb]`,
@@ -22,7 +23,7 @@ const style = {
 
 const Nft = () => {
   const router = useRouter()
-  const { provider } = useWeb3()
+  const { provider, address } = useWeb3()
   const [nfts, setNfts] = useState([])
   const [marketPlaceModule, setMarketplaceModule] = useState([])
   const [listings, setListings] = useState([])
@@ -38,11 +39,11 @@ const Nft = () => {
     setSelectedNft(selectedNft)
     setMarketplaceModule(marketPlaceModule)
     //console.log('sId: ',selectedNft.nftId)
-    const nfts = await nftModule.erc721.get(selectedNft.nftId);
+    const nfts = await nftModule.erc721.get(1);
     setNfts(nfts)
   })()
 
-  //console.log('nft: ',nfts)
+  console.log('nft: ',nfts)
   return (
     <div>
       <Header />
@@ -69,18 +70,18 @@ const Nft = () => {
                     className={style.a}
                     onClick={() => {
                       Router.push({
-                        pathname: `/profile/${nfts.owner}`,
+                        pathname: `/profile/0xc672c35EAd53fFE8099593393547c2A0a6E7B625`,
                       })
                     }}
                     >
-                      {' ' + nfts.owner.substr(0,5) + '...' + nfts.owner.substr(38)}
+                    {' ' + nfts.owner.substr(0,5) + '...' + nfts.owner.substr(38)}
                   </span>
                 </div>
               </div>
               <div>
                 <div className={style.title}>Attributes</div>
                 <div>
-                    {nfts.metadata.attributes.map((attribute, id) => (
+                  {nfts.metadata.attributes.map((attribute, id) => (
                     <div>
                       <span>{nfts.metadata.attributes[id].trait_type}:&nbsp;</span> 
                       <span>{nfts.metadata.attributes[id].value}&nbsp;</span>
@@ -92,7 +93,7 @@ const Nft = () => {
             <div className={style.detailsContainer}>
               <div>
                 <p>Top Bid:</p>
-                <p>High Bidder: </p>
+                <p>High Bidder:</p>
                 <p>Price:</p>
               </div>
               <div>
