@@ -3,7 +3,7 @@ import {CgArrowsExchangeV} from 'react-icons/cg'
 import {AiOutlineDown, AiOutlineUp} from 'react-icons/ai'
 import {useState} from 'react'
 import {dummyEvents} from '../../static/dummyEvents'
-import EventItem from './ItemActivity/EventItem'
+//import EventItem from './ItemActivity/EventItem'
 
 const style = {
   eventItem: `flex px-4 py-5 font-medium`,
@@ -47,9 +47,9 @@ const ItemActivity = () => {
 							<div className={`${style.tableHeaderElement} flex-[2]`}>To</div>
 							<div className={`${style.tableHeaderElement} flex-[2]`}>Date</div>
 						</div>
-							{dummyEvents.map((event, id) => (
+							{/*{dummyEvents.map((event, id) => (
 								<EventItem key={id} event={event} />
-							))}
+							))}*/}
 					</div>
 				)}	
 		</div>
