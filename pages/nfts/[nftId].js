@@ -2,12 +2,11 @@ import Header from '../../components/Header'
 import { useEffect, useMemo, useState } from 'react'
 import { useWeb3 } from '@3rdweb/hooks'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import NFTImage from '../../components/nft/NFTImage'
 import GeneralDetails from '../../components/nft/GeneralDetails'
 import ItemActivity from '../../components/nft/ItemActivity'
 import Purchase from '../../components/nft/Purchase'
-import Router from 'next/router'
 
 const style = {
   wrapper: `flex flex-col items-center container-lg text-[#e5e8eb]`,
@@ -22,28 +21,36 @@ const style = {
 }
 
 const Nft = () => {
-  const router = useRouter()
   const { provider, address } = useWeb3()
-  const [nfts, setNfts] = useState([])
-  const [marketPlaceModule, setMarketplaceModule] = useState([])
-  const [listings, setListings] = useState([])
   const [selectedNft, setSelectedNft] = useState()
+  const [nftModule, setNftModule] = useState()
+  const [listings, setListings] = useState([])
+  const router = useRouter()
   const phunkMarket = '0x8aC28C421d2CB0CbE06d47D617314159247Cd2dc'
   const alchApi = 'https://eth-goerli.g.alchemy.com/v2/Xq9-5SRgOVU_UxK6uHdIk-oNvvO_n1iZ'
-  const sdk = new ThirdwebSDK('goerli');
+  const sdk = new ThirdwebSDK('goerli')
+  const id = router.query.nftId
 
-  (async () => {
-    const selectedNft = router.query
-    const nftModule = await sdk.getContract('0x169b1CE420F585d8cB02f3b23240a5b90BA54C92');
-    const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
-    setSelectedNft(selectedNft)
-    setMarketplaceModule(marketPlaceModule)
-    //console.log('sId: ',selectedNft.nftId)
-    const nfts = await nftModule.erc721.get(1);
-    setNfts(nfts)
-  })()
+  useEffect(() => {
+    (async () => {
+      const cont = await sdk.getContract('0x169b1CE420F585d8cB02f3b23240a5b90BA54C92')
+      setNftModule(cont)
+      if(!nftModule) return;
+      (console.log('m: ',nftModule))
+      if (!id) return;
+      (async () => {      
+        const nfts = await nftModule.erc721.get(id);
+        console.log('id: ', id, 'nft: ', nfts)
+        setSelectedNft(nfts)
 
-  console.log('nft: ',nfts)
+        const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
+        const listings = await marketPlaceModule.getActiveListings();
+        setListings(listings)
+      })()
+    })()
+  })
+
+  if(!selectedNft) return;
   return (
     <div>
       <Header />
@@ -51,7 +58,7 @@ const Nft = () => {
         <div className={style.container}>
           <div className={style.topContent}>              
             <div className={style.nftImgContainer}>
-              <img src={nfts.metadata.image}/>
+              <img src={selectedNft.metadata.image}/>
             </div>
             <div className={style.detailsContainer}>
               <div>
@@ -63,28 +70,24 @@ const Nft = () => {
                 </a>
               </div>
               <div className='my-4'>
-                <div className={style.title}>{nfts.metadata.description}</div>
+                <div className={style.title}>{selectedNft.metadata.description}</div>
                 <div>
                   Owner: 
-                  <span 
+                  <a 
                     className={style.a}
-                    onClick={() => {
-                      Router.push({
-                        pathname: `/profile/0xc672c35EAd53fFE8099593393547c2A0a6E7B625`,
-                      })
-                    }}
-                    >
-                    {' ' + nfts.owner.substr(0,5) + '...' + nfts.owner.substr(38)}
-                  </span>
+                    href={`/profile/${selectedNft.owner}`}
+                  >
+                    {' ' + selectedNft.owner.substr(0,5) + '...' + selectedNft.owner.substr(38)}
+                  </a>
                 </div>
               </div>
               <div>
                 <div className={style.title}>Attributes</div>
                 <div>
-                  {nfts.metadata.attributes.map((attribute, id) => (
+                  {selectedNft.metadata.attributes.map((attribute, id) => (
                     <div>
-                      <span>{nfts.metadata.attributes[id].trait_type}:&nbsp;</span> 
-                      <span>{nfts.metadata.attributes[id].value}&nbsp;</span>
+                      <span>{selectedNft.metadata.attributes[id].trait_type}:&nbsp;</span> 
+                      <span>{selectedNft.metadata.attributes[id].value}&nbsp;</span>
                     </div>
                   ))}
                 </div>

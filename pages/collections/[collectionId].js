@@ -25,8 +25,6 @@ const style = {
 const Collection = () => {
   const router = useRouter()
   const { address, provider } = useWeb3()
-  const { collectionId } = router.query
-  const [collection, setCollection] = useState({})
   const [nfts, setNfts] = useState([])
   const [listings, setListings] = useState([])
   const [page, setPage] = useState(0)
