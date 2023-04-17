@@ -47,7 +47,7 @@ const Nft = () => {
         const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
         const listings = await marketPlaceModule.getActiveListings();
         setListings(listings)
-        const ml = listings.find((listing) => listing.asset.id === '1')
+        const ml = listings.find((listing) => listing.asset.id === id)
         setPrice(eval(ml.buyoutPrice._hex) / 10 ** 18)
       })()
     })()
