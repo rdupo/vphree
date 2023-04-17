@@ -25,6 +25,7 @@ const Nft = () => {
   const [selectedNft, setSelectedNft] = useState()
   const [nftModule, setNftModule] = useState()
   const [listings, setListings] = useState([])
+  const [price, setPrice] = useState()
   const router = useRouter()
   const phunkMarket = '0x8aC28C421d2CB0CbE06d47D617314159247Cd2dc'
   const alchApi = 'https://eth-goerli.g.alchemy.com/v2/Xq9-5SRgOVU_UxK6uHdIk-oNvvO_n1iZ'
@@ -36,16 +37,18 @@ const Nft = () => {
       const cont = await sdk.getContract('0x169b1CE420F585d8cB02f3b23240a5b90BA54C92')
       setNftModule(cont)
       if(!nftModule) return;
-      (console.log('m: ',nftModule))
+      //(console.log('m: ',nftModule))
       if (!id) return;
       (async () => {      
         const nfts = await nftModule.erc721.get(id);
-        console.log('id: ', id, 'nft: ', nfts)
+        //console.log('id: ', id, 'nft: ', nfts)
         setSelectedNft(nfts)
 
         const marketPlaceModule = await sdk.getContract(phunkMarket, 'marketplace');
         const listings = await marketPlaceModule.getActiveListings();
         setListings(listings)
+        const ml = listings.find((listing) => listing.asset.id === '1')
+        setPrice(eval(ml.buyoutPrice._hex) / 10 ** 18)
       })()
     })()
   })
@@ -95,15 +98,22 @@ const Nft = () => {
             </div>
             <div className={style.detailsContainer}>
               <div>
-                <p>Top Bid:</p>
-                <p>High Bidder:</p>
-                <p>Price:</p>
+                <p className={style.title}>Price: {price}</p>
+                {/*<p>Top Bid:</p>
+                <p>High Bidder:</p>*/}
               </div>
               <div>
-                <button className={style.button}>BUY</button>
-                <button className={style.buttonAlt}>BID</button>
-                <button className={style.button}>LIST</button>
-                <button className={style.buttonAlt}>ACCEPT BID</button>
+              {price > 0 ? (
+                <>
+                  <button className={style.buttonAlt}>BID</button>
+                  <button className={style.button}>BUY</button>
+                </>
+                ) : (
+                <>
+                  <button className={style.button}>LIST</button>
+                  <button className={style.buttonAlt}>ACCEPT BID</button>
+                </>
+                )}
               </div>
             </div>
           </div>
